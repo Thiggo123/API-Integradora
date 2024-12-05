@@ -18,7 +18,7 @@ namespace API_Integradora.Controllers
             _contexto = contexto;
         }
         [HttpPost("converter")]
-        public IActionResult ConverterLogs([FromBody] List<string> logEntradas, [FromQuery] List<int> logIds = null)
+        public IActionResult ConverterLogs([FromBody] List<string> logEntradas, [FromQuery] List<int> logIds = null, [FromQuery] bool download = false)
         {
             if ((logEntradas == null || !logEntradas.Any()) && logIds == null)
             {
@@ -62,6 +62,17 @@ namespace API_Integradora.Controllers
 
 
                 _contexto.SaveChanges();
+
+                if (download)
+                {
+                    var arquivo = string.Join(Environment.NewLine, logsConvertidos);
+                    var arquivoNome = "logs_convertidos.txt";
+
+                    var arquivoBytes = System.Text.Encoding.UTF8.GetBytes(arquivo);
+
+                    return File(arquivoBytes, "text/plain", arquivoNome);
+                }
+
                 return Ok(logsConvertidos);
             }
             if (logIds != null && logIds.Any())
@@ -88,6 +99,16 @@ namespace API_Integradora.Controllers
                     return BadRequest("nenhum log para converter");
                 }
 
+                if (download)
+                {
+                    var arquivo = string.Join(Environment.NewLine, logsConvertidos);
+                    var arquivoNome = "logs_convertidos.txt";
+
+                    var arquivoBytes = System.Text.Encoding.UTF8.GetBytes(arquivo);
+
+                    return File(arquivoBytes, "text/plain", arquivoNome);
+                }
+
                 return Ok(logsConvertidos);
 
 
@@ -95,7 +116,7 @@ namespace API_Integradora.Controllers
             return Ok(logsConvertidos);
         }
         [HttpGet("recuperar")]
-        public IActionResult RecuperarLog([FromQuery] List<int> logIds = null)
+        public IActionResult RecuperarLog([FromQuery] List<int> logIds = null, [FromQuery] bool download = false)
         {
             if (logIds == null || !logIds.Any())
             {
@@ -103,6 +124,16 @@ namespace API_Integradora.Controllers
             }
 
             var logsRecuperados = _contexto.Logs.Where(x => logIds.Contains(x.Id)).ToList();
+
+            if (download)
+            {
+                var arquivo = string.Join(Environment.NewLine, logsRecuperados);
+                var arquivoNome = "logs_convertidos.txt";
+
+                var arquivoBytes = System.Text.Encoding.UTF8.GetBytes(arquivo);
+
+                return File(arquivoBytes, "text/plain", arquivoNome);
+            }
 
             return Ok(logsRecuperados);
 
