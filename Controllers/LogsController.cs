@@ -52,7 +52,9 @@ namespace API_Integradora.Controllers
                             Codigo = codigo,
                             Status = status,
                             Acao = acao,
-                            Tempo = tempo
+                            Tempo = tempo,
+                            LogOriginal = log,
+                            LogConvertido = resultado
                         };
                         _contexto.Logs.Add(novoLog);
                     }
@@ -74,7 +76,13 @@ namespace API_Integradora.Controllers
                 {
                     string resultado = $"\"MINHA CDN\" {log.Status}  {log.Tempo} {log.Codigo} {log.Acao} ";
                     logsConvertidos.Add(resultado);
+
+                    log.LogConvertido = resultado;
+
+                    _contexto.Logs.Update(log);
                 }
+                _contexto.SaveChanges();
+
                 if (!logsConvertidos.Any())
                 {
                     return BadRequest("nenhum log para converter");
