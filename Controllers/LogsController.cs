@@ -94,5 +94,18 @@ namespace API_Integradora.Controllers
             }
             return Ok(logsConvertidos);
         }
+        [HttpGet("recuperar")]
+        public IActionResult RecuperarLog([FromQuery] List<int> logIds = null)
+        {
+            if (logIds == null || !logIds.Any())
+            {
+                return NotFound("Nenhum log com este ID foi encontrado");
+            }
+
+            var logsRecuperados = _contexto.Logs.Where(x => logIds.Contains(x.Id)).ToList();
+
+            return Ok(logsRecuperados);
+
+        }
     }
 }
