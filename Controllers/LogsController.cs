@@ -16,7 +16,7 @@ namespace API_Integradora.Controllers
         {
             _contexto = contexto;
         }
-
+        [HttpPost("converter")]
         public IActionResult ConverterLogs([FromBody] List<string> logEntradas)
         {
             if (logEntradas == null || !logEntradas.Any()) {
@@ -33,10 +33,12 @@ namespace API_Integradora.Controllers
                     var status = int.Parse(partes[1].Trim());
                     var acao = partes[2].Trim('"');
                     var detalhe = partes[3].Trim('"');
+                    var txt = detalhe.Substring(4, 11);
+                    var req = detalhe.Substring(0,4);
                     var tempo = Math.Round(double.Parse(partes[4].Trim()), 1);
 
 
-                    string resultado = $"\"AGORA\" {acao} {status} {detalhe} {tempo} {codigo} ";
+                    string resultado = $"\"MINHA CDN\" {req} {status} {txt} {tempo} {codigo} {acao} ";
 
                     logsConvertidos.Add(resultado);
 
